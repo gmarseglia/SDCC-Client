@@ -3,7 +3,7 @@ module client
 go 1.21.5
 
 require (
-	github.com/gmarseglia/SDCC-Common v0.1.1
+	github.com/gmarseglia/SDCC-Common v0.2.0
 	google.golang.org/grpc v1.65.0
 )
 

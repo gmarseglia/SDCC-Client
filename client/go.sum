@@ -1,5 +1,7 @@
 github.com/gmarseglia/SDCC-Common v0.1.1 h1:TdVsFIzpH3a84B0cG2WTIil4Uu6bAy34iCg9FTB0Hhw=
 github.com/gmarseglia/SDCC-Common v0.1.1/go.mod h1:tBzdchVfF4dLVa1XedXTL+HahpFG+VNVD2AHFGdOWYk=
+github.com/gmarseglia/SDCC-Common v0.2.0 h1:JCyp5xKzgt2DxgLdTQ9QdHIStmtqKr58W9sqH3Tn1ps=
+github.com/gmarseglia/SDCC-Common v0.2.0/go.mod h1:tBzdchVfF4dLVa1XedXTL+HahpFG+VNVD2AHFGdOWYk=
 github.com/golang/protobuf v1.5.4/go.mod h1:lnTiLA8Wa4RWRcIUkrtSVa5nRhsEGBg48fD6rSs7xps=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=

@@ -34,6 +34,7 @@ var (
 	AvgPoolSize  = flag.Int("AvgPoolSize", -1, "The size of the average pooling.")
 	UseSigmoid   = flag.Bool("UseSigmoid", false, "Use sigmoid function.")
 	RandomValues = flag.Bool("RandomValues", false, "Use random values.")
+	ManualValues = flag.Bool("ManualValues", false, "Use manual values.")
 	counter      int
 	counterLock  sync.Mutex
 	wg           sync.WaitGroup
@@ -54,6 +55,7 @@ func setupFields() {
 	utils.SetupFieldInt(false, AvgPoolSize, "AvgPoolSize", 500, nil)
 	utils.SetupFieldBool(UseSigmoid, "UseSigmoid")
 	utils.SetupFieldBool(RandomValues, "RandomValues")
+	utils.SetupFieldBool(ManualValues, "ManualValues")
 }
 
 func exit() {
@@ -93,11 +95,25 @@ func convolutionalRun() {
 	// Produce the request
 	frontRequest := &pb.ConvolutionalLayerFrontRequest{}
 
-	target := utils.GenerateMatrix(targetSize, targetSize, *RandomValues, 1)
-	frontRequest.Target = utils.MatrixToProto(target)
-	for i := 0; i < kernelNum; i++ {
-		frontRequest.Kernel = append(frontRequest.Kernel, utils.MatrixToProto(utils.GenerateMatrix(kernelSize, kernelSize, *RandomValues, 1)))
+	// Set the target (input) matrix
+	var target [][]float32
+	if *ManualValues {
+		target = utils.ManualInputMatrix("target", targetSize)
+	} else {
+		target = utils.GenerateMatrix(targetSize, targetSize, *RandomValues, 1)
 	}
+	frontRequest.Target = utils.MatrixToProto(target)
+
+	// Set the kernels
+	for i := 0; i < kernelNum; i++ {
+		if *ManualValues {
+			frontRequest.Kernel = append(frontRequest.Kernel, utils.MatrixToProto(utils.ManualInputMatrix(fmt.Sprintf("kernel %d", i), kernelSize)))
+		} else {
+			frontRequest.Kernel = append(frontRequest.Kernel, utils.MatrixToProto(utils.GenerateMatrix(kernelSize, kernelSize, *RandomValues, 1)))
+		}
+	}
+
+	// Set the other fields
 	frontRequest.AvgPoolSize = int32(avgPoolSize)
 	frontRequest.UseKernels = useKernels
 	frontRequest.UseSigmoid = useSigmoid
@@ -128,6 +144,7 @@ func convolutionalRun() {
 		time.Since(startTime).Milliseconds(),
 		len(r.GetResult()))
 
+	// print the result
 	if *Verbose {
 		utils.PrettyPrint("Target", target)
 		for _, kernel := range frontRequest.Kernel {
